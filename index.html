@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Hello World</title>
+  </head>
+    <body>
+    <h1 id="bigOne"></h1>
+    <button id="btn-google">Google</button>
+     <!-- <input type="button" onclick="IngresoGoogle()">
+    <!-- inicio conexion firebase -->
+    <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase.js"></script>
+    <script>
+      // Initialize Firebase
+      var config = {
+        apiKey: "AIzaSyDR1D17Q6l3DMcs4M5CpiA-c7jWWaKw1-Y",
+        authDomain: "gradebook-4e8b4.firebaseapp.com",
+        databaseURL: "https://gradebook-4e8b4.firebaseio.com",
+        projectId: "gradebook-4e8b4",
+        storageBucket: "gradebook-4e8b4.appspot.com",
+        messagingSenderId: "1000813412608"
+      };
+
+      firebase.initializeApp(config);
+      // fin conexion firebase
+      var ref = firebase.database().ref();
+          ref.on("value", function(snapshot){
+              var data = snapshot.val();
+              document.getElementById("bigOne").textContent = data.text2;
+      });
+
+      function IngresoGoogle(){alert(1);
+        if(!firebase.auth().currentUser){alert(2);
+          var provider = new firebase.auth.GoogleAuthProvider();
+		  console.log(provider);
+          provider.addScope ('https://www.googleapis.com/auth/plus.login');
+          firebase.auth().signInWithPopup(provider).then(function(result) {
+			console.log(result);
+            var token = result.credential.accessToken;
+            var user = result.user;
+            console.log(user);
+          }).catch(function(error) {
+			console.log(error);
+            var errorCode = error.code;
+            var errorMessage = error.message;
+            var email = error.email;
+            var credential = error.credential;
+            if (errorCode=='auth/account-exists-with-different-credential'){
+              alert ("Es el mismo usuario");
+            }
+          });
+        }else{
+          firebase.auth().signOut();
+        }
+      }
+      document.getElementById('btn-google').addEventListener('click', IngresoGoogle);
+    </script>
+    </body>
+</html>
